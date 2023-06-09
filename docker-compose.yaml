@@ -1,0 +1,26 @@
+version: '3.1'
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_department_db:/var/lib/postgresql/data
+      - ./scripts/init-user-db.sh:/docker-entrypoint-initdb.d/init-user-db.sh
+    ports:
+      - '5433:5432'
+    networks:
+      - custom
+
+networks:
+  custom:
+    driver: bridge
+
+volumes:
+  postgres_department_db:
