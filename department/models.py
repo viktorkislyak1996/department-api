@@ -1,11 +1,8 @@
-import uuid
-
 from django.db import models
 from django.utils.safestring import mark_safe
 
 
 class Department(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     title = models.CharField(max_length=255, db_index=True)
     created = models.DateTimeField(auto_now_add=True)
 
@@ -17,14 +14,13 @@ class Department(models.Model):
 
 
 class Employee(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     first_name = models.CharField(max_length=40)
     last_name = models.CharField(max_length=40, db_index=True)
-    middle_name = models.CharField(max_length=40, null=True)
+    middle_name = models.CharField(max_length=40, null=True, blank=True)
     department = models.ForeignKey(
         Department, on_delete=models.SET_NULL, null=True, related_name="employees"
     )
-    photo = models.ImageField(upload_to="photos/employees")
+    photo = models.ImageField(upload_to="photos/employees", null=True, blank=True)
     position = models.CharField(max_length=255)
     salary = models.DecimalField(max_digits=20, decimal_places=2)
     age = models.PositiveSmallIntegerField()
@@ -37,4 +33,7 @@ class Employee(models.Model):
         return f"{self.first_name} {self.last_name}"
 
     def image_preview(self):
-        return mark_safe(f'<img src="{self.photo.url}" width="100px" height="100px" />')
+        if self.photo:
+            return mark_safe(
+                f'<img src="{self.photo.url}" width="100px" height="100px" />'
+            )
