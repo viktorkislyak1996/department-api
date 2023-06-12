@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.utils.safestring import mark_safe
 
 
 class Department(models.Model):
@@ -34,3 +35,6 @@ class Employee(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
+
+    def image_preview(self):
+        return mark_safe(f'<img src="{self.photo.url}" width="100px" height="100px" />')
