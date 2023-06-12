@@ -1,9 +1,23 @@
+from django.db.models import Sum
 from rest_framework import serializers
 
 from department.models import Department, Employee
 
 
-class EmployeeSerializer(serializers.ModelSerializer):
+class NullToEmptyModelSerializer(serializers.ModelSerializer):
+    """
+    Replace all null values to empty string in serialized result.
+    """
+
+    def to_representation(self, instance):
+        result = super().to_representation(instance)
+        for i, v in result.items():
+            if v is None:
+                result[i] = ""
+        return result
+
+
+class EmployeeSerializer(NullToEmptyModelSerializer):
     class Meta:
         model = Employee
         fields = [
@@ -18,7 +32,21 @@ class EmployeeSerializer(serializers.ModelSerializer):
         ]
 
 
-class DepartmentSerializer(serializers.ModelSerializer):
+class DepartmentSerializer(NullToEmptyModelSerializer):
+    employee_count = serializers.SerializerMethodField()
+    total_salary = serializers.SerializerMethodField()
+
+    def get_employee_count(self, instance):
+        return Employee.objects.filter(department=instance).count()
+
+    def get_total_salary(self, instance):
+        total = Employee.objects.filter(department=instance).aggregate(
+            total=Sum("salary")
+        )
+        if result := total.get("total"):
+            return result
+        return 0
+
     class Meta:
         model = Department
-        fields = ["title"]
+        fields = ["title", "employee_count", "total_salary"]
