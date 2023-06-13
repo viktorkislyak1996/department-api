@@ -23,16 +23,19 @@ What kind of things you need to install on your workstation to start:
 
 ### Installing
 1. Clone the repo.
+
    ```sh
    $ git clone git@github.com:viktorkislyak1996/department-api.git
    ```
 2. Install requirements and activate virtual environment.
+
     ```sh
    $ cd department-api
    $ poetry install
    $ poetry shell
    ```
 3. Define environment variables
+
     ```sh
     (project-api-department-py3.11) $ vim .env
     ```
@@ -48,6 +51,7 @@ What kind of things you need to install on your workstation to start:
     DB_PORT = 5433
     ```
 4. Migrate and run docker compose by predefined `make` command.
+
     ```sh
     (project-api-department-py3.11) $ make app
     ```
