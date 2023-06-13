@@ -8,7 +8,7 @@ schema_view = get_swagger_view(title="Department API")
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("department.urls"), name="department"),
+    path("", include("department.urls")),
     path("swagger/", schema_view),
 ]
 
