@@ -8,15 +8,14 @@ from department.serializers import DepartmentSerializer, EmployeeSerializer
 
 class DepartmentsEmployeesSerializerTestCase(TestCase):
 
-    @classmethod
-    def setUpTestData(cls):
-        department1 = Department.objects.create(title='A-department')
+    def setUp(self):
+        self.department1 = Department.objects.create(title='A-department')
         Department.objects.create(title='B-department')
 
         Employee.objects.create(
             first_name='Egor',
             last_name='Letov',
-            department=department1,
+            department=self.department1,
             position='Singer',
             salary=60000,
             age=42
@@ -24,7 +23,7 @@ class DepartmentsEmployeesSerializerTestCase(TestCase):
         Employee.objects.create(
             first_name='Anton',
             last_name='Peskov',
-            department=department1,
+            department=self.department1,
             position='Java developer',
             salary=250000,
             age=23
@@ -38,7 +37,7 @@ class DepartmentsEmployeesSerializerTestCase(TestCase):
                 "last_name": "Letov",
                 "first_name": "Egor",
                 "middle_name": "",
-                "department": 1,
+                "department": self.department1.id,
                 "photo": "",
                 "position": "Singer",
                 "salary": "60000.00",
@@ -48,7 +47,7 @@ class DepartmentsEmployeesSerializerTestCase(TestCase):
                 "last_name": "Peskov",
                 "first_name": "Anton",
                 "middle_name": "",
-                "department": 1,
+                "department": self.department1.id,
                 "photo": "",
                 "position": "Java developer",
                 "salary": "250000.00",
